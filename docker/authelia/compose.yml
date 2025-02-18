@@ -1,0 +1,13 @@
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    volumes:
+      - ${AUTHELIA_CONFIG}:/config
+    ports:
+      - 9091:9091
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+    healthcheck:
+      disable: false
