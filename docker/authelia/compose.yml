@@ -1,5 +1,7 @@
 networks:
-  net:
+  proxy:
+    name: proxy
+    external: true
     driver: bridge
 services:
   authelia:
@@ -8,10 +10,10 @@ services:
     volumes:
       - ${AUTHELIA_CONFIG}:/config
     ports:
-      - '127.0.0.1:9091:9091'
+      - '0.0.0.0:9091:9091'
     restart: unless-stopped
     networks:
-      - net
+      - proxy
     environment:
       - TZ=${TZ}
     healthcheck:

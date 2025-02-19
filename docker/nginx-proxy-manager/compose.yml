@@ -1,5 +1,7 @@
 networks:
-  net:
+  proxy:
+    name: proxy
+    external: true
     driver: bridge
 services:
   nginx-proxy-manager:
@@ -7,7 +9,7 @@ services:
     container_name: nginx-proxy-manager
     restart: unless-stopped
     networks:
-      - net
+      - proxy
     ports:
       - 80:80
       - 81:81
