@@ -7,6 +7,8 @@ services:
   authelia:
     image: authelia/authelia
     container_name: authelia
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - ${AUTHELIA_CONFIG}:/config
     ports:
