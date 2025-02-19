@@ -1,0 +1,53 @@
+name: auth
+networks:
+  net:
+    driver: bridge
+services:
+  lldap:
+    image: lldap/lldap:stable
+    container_name: lldap
+    ports:
+      - "3890:3890"
+      - "17170:17170"
+    volumes:
+      - ${LLDAP_DATA}:/data
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+      - TZ=${TZ}
+      - LLDAP_JWT_SECRET=${LLDAP_JWT_SECRET}
+      - LLDAP_KEY_SEED=${LLDAP_KEY_SEED}
+      - LLDAP_LDAP_BASE_DN=${LLDAP_LDAP_BASE_DN}
+      - LLDAP_LDAP_USER_PASS=${LLDAP_LDAP_USER_PASS}
+ 
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    networks:
+      - net
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - ${NGINX_PROXY_DATA}:/data
+      - ${NGINX_PROXY_LETSENCRYPT}:/etc/letsencrypt
+  
+  authelia:
+    image: authelia/authelia
+    container_name: authelia
+    volumes:
+      - ${AUTHELIA_CONFIG}:/config
+    expose:
+      - 9091
+    restart: unless-stopped
+    networks:
+      - net
+    environment:
+      - TZ=${TZ}
+    healthcheck:
+      disable: false
+    depends_on:
+      - lldap
+      - nginx-proxy-manager
