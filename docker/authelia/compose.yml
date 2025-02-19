@@ -4,10 +4,14 @@ services:
     container_name: authelia
     volumes:
       - ${AUTHELIA_CONFIG}:/config
-    ports:
-      - 9091:9091
+    expose:
+      - 9091
     restart: unless-stopped
+    networks:
+      - net
     environment:
       - TZ=${TZ}
     healthcheck:
       disable: false
+networks:
+      - net
