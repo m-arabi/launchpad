@@ -1,6 +1,3 @@
-networks:
-  net:
-    driver: bridge
 services:
   authelia:
     image: authelia/authelia
