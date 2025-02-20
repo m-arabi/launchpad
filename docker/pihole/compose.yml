@@ -16,6 +16,8 @@ services:
     environment:
       # Set the appropriate timezone for your location (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g:
       TZ: ${TZ}
+      PIHOLE_UID: 0
+      PIHOLE_GID: 0
       # Set a password to access the web interface. Not setting one will result in a random password being assigned
       FTLCONF_webserver_api_password: ${FTLCONF_WEBSERVER_API_PASSWORD}
     # Volumes store your data between container upgrades
