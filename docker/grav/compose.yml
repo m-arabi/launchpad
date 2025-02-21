@@ -1,0 +1,14 @@
+---
+services:
+  grav:
+    image: lscr.io/linuxserver/grav:latest
+    container_name: grav
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${GRAV_CONFIG}:/config
+    ports:
+      - ${GRAV_PORT}:80
+    restart: unless-stopped
