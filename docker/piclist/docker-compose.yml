@@ -1,0 +1,25 @@
+services:
+  piclist:
+    image: kuingsmile/piclist:latest
+    container_name: piclist
+    restart: always
+    ports:
+      - ${PICLIST_PORT}:36677
+    volumes:
+      - ${PICLIST_DATA}:/root/.piclist
+    command: node /usr/local/bin/picgo-server
+    
+  nginx:
+    image: lscr.io/linuxserver/nginx:latest
+    container_name: nginx
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${NGINX_CONFIGPATH}:/config
+      - ${NGINX_SITEDATA}:/config/www
+    ports:
+      - ${NGINX_PORT}:80
+      # - 443:443
+    restart: unless-stopped
