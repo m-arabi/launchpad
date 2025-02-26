@@ -5,10 +5,10 @@ services:
     container_name: kasm
     privileged: true
     environment:
-      - KASM_PORT=443
+      - KASM_PORT=3000
     volumes:
       - ${KASM_OPT}:/opt
     ports:
       - 3000:3000
-      - 443:443
+      #- 443:443
     restart: unless-stopped
