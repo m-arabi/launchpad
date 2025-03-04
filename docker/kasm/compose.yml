@@ -4,12 +4,12 @@ services:
     image: lscr.io/linuxserver/kasm:latest
     container_name: kasm
     privileged: true
-    security_opt:
-      - apparmor:rootlesskit
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
+    # security_opt:
+    #   - apparmor:rootlesskit
+    # cap_add:
+    #   - NET_ADMIN
+    # devices:
+    #   - /dev/net/tun:/dev/net/tun
     environment:
       - KASM_PORT=443
     volumes:
