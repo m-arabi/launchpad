@@ -1,0 +1,122 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect. See https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - 9696:9696 # prowlarr
+      - 8191:8191 # flaresolverr
+      - 7878:7878 # radarr
+      - 8989:8989 # sonarr
+      - 8686:8686 # lidarr
+      - 8787:8787 # readarr
+    volumes:
+      - ${GLUETUN_PATH}:/gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FIREWALL_OUTBOUND_SUBNETS=${FIREWALL_OUTBOUND_SUBNETS}
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
+      - VPN_TYPE=${VPN_TYPE}
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - TZ=${TZ}
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    network_mode: service:gluetun
+    restart: always
+    depends_on:
+      - gluetun
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: service:gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${PROWLARR_CONFIG}:/config
+    restart: always
+    depends_on:
+      - gluetun
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    network_mode: service:gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${RADARR_CONFIG}:/config
+      - ${RADARR_MEDIA}:/movies
+      - ${RADARR_PRIVATE_MOVIES}:/private_movies
+      - ${RADARR_PRIVATE_ANIME_MOVIES}:/private_anime_movies
+      - ${RADARR_DOWNLOADS}:/downloads
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    network_mode: service:gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${SONARR_CONFIG}:/config
+      - ${SONARR_MEDIA}:/shows
+      - ${SONARR_PRIVATE_SHOWS}:/private_shows
+      - ${SONARR_PRIVATE_ANIME_SHOWS}:/private_anime_shows
+      - ${SONARR_DOWNLOADS}:/downloads
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    network_mode: service:gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${LIDARR_CONFIG}:/config
+      - ${LIDARR_MEDIA}:/music
+      - ${LIDARR_DOWNLOADS}:/downloads
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    network_mode: service:gluetun
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${READARR_CONFIG}:/config
+      - ${READARR_MEDIA}:/books
+      - ${READARR_DOWNLOADS}:/downloads
+    restart: unless-stopped
+    depends_on:
+      - gluetun
