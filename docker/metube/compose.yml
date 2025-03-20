@@ -1,0 +1,21 @@
+services:
+  metube:
+    image: ghcr.io/alexta69/metube:latest
+    container_name: metube
+    environment:
+      - UID=${PUID}
+      - GID=${PGID}
+      - 'YTDL_OPTIONS={"ignoreerrors":true, "writeinfojson":true, "writethumbnail": true, "windowsfilenames": true}'
+      # - 'OUTPUT_TEMPLATE=%(playlist_title&Playlist |)S%(playlist_title|)S%(playlist_uploader& by |)S%(playlist_uploader|)S%(playlist_autonumber& - |)S%(playlist_autonumber|)S%(playlist_count& of |)S%(playlist_count|)S%(playlist_autonumber& - |)S%(uploader,creator|UNKNOWN_AUTHOR)S - %(title|UNKNOWN_TITLE)S - %(release_date>%Y-%m-%d,upload_date>%Y-%m-%d|UNKNOWN_DATE)S [%(id)S].%(ext)s'
+      # - OUTPUT_TEMPLATE=%(channel|unknown)s/%(playlist_title)s/[%(release_date,upload_date|unknown_date)s] - %(title)s - [%(height)sP].%(ext)s
+      - OUTPUT_TEMPLATE=%(channel|unknown)s/%(playlist_title)s/%(release_date,upload_date|unknown_date)s - %(title)s - [%(height)sP] - [%(id)s].%(ext)s
+      # - OUTPUT_TEMPLATE=%(title)s.%(ext)s
+      # - 'OUTPUT_TEMPLATE=%(playlist_title&Playlist |)S%(playlist_title|)S%(playlist_uploader& by |)S%(playlist_uploader|)S%(playlist_autonumber& - |)S%(playlist_autonumber|)S%(playlist_count& of |)S%(playlist_count|)S%(playlist_autonumber& - |)S%(uploader,creator|UNKNOWN_AUTHOR)S - %(title|UNKNOWN_TITLE)S - %(release_date>%Y-%m-%d,upload_date>%Y-%m-%d|UNKNOWN_DATE)S.%(ext)s'
+      # - OUTPUT_TEMPLATE=%(channel|unknown)s/%(playlist_title)s/Episode S01E%(playlist_index)s - %(title)s - [%(height)sP].%(ext)s
+      # - OUTPUT_TEMPLATE=%(channel|unknown)s/%(playlist_title,playlist|videos)s/[%(release_date,upload_date|unknown_date)s] - %(title)s %([height])s.%(ext)s
+      # - OUTPUT_TEMPLATE=%(playlist)s/%(title)s.%(ext)s
+    ports:
+      - ${METUBE_PORT}:8081
+    volumes:
+      - ${METUBE_PATH}:/downloads
+    restart: unless-stopped

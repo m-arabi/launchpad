@@ -1,0 +1,10 @@
+services:
+  netbird:
+    image: netbirdio/netbird:latest
+    container_name: netbird
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - NB_SETUP_KEY=${NB_SETUP_KEY}
+    volumes:
+      - ${NETBIRD_DATA}:/etc/netbird
