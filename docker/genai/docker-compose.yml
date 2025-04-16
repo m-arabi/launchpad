@@ -1,0 +1,36 @@
+services:
+  open-webui:
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+    ports:
+        - 3000:8080
+    volumes:
+        - ${OPEN_WEBUI_PATH}:/app/backend/data
+    container_name: open-webui
+    image: ghcr.io/open-webui/open-webui:main
+  
+  ollama:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities:
+    #               - gpu
+    volumes:
+      - ${OLLAMA_PATH}:/root/.ollama
+    ports:
+      - 11434:11434
+    container_name: ollama
+    image: ollama/ollama
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    environment:
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      - LITELLM_SALT_KEY=${LITELLM_SALT_KEY}
+    ports:
+        - 3000:8002
+    command: --port 8002
+    # command: --port 8002 --num_workers 8

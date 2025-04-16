@@ -1,0 +1,13 @@
+services:
+  memos:
+    image: neosmemo/memos:latest
+    container_name: memos
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - TZ=${TZ}
+    ports:
+      - ${MEMOS_PORT}:5230
+    restart: unless-stopped
+    volumes:
+      - ${MEMOS_DATA}:/var/opt/memos

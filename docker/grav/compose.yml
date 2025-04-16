@@ -1,4 +1,3 @@
----
 services:
   grav:
     image: lscr.io/linuxserver/grav:latest
