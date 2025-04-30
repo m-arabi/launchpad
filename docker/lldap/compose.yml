@@ -1,16 +1,9 @@
-networks:
-  proxy:
-    name: proxy
-    external: true
-    driver: bridge
 # https://github.com/lldap/lldap
 services:
   lldap:
     image: lldap/lldap:stable
     container_name: lldap
     restart: unless-stopped
-    networks:
-      - proxy
     ports:
       # For LDAP, not recommended to expose, see Usage section.
       - "3890:3890"
