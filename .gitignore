@@ -1,3 +1,6 @@
 .env
 configuration*
 config*
+docker/nextcloud/default.conf
+compose.yml.bak
+docker-compose.yml.bak
