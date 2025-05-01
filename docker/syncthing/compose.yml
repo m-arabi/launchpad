@@ -5,8 +5,8 @@ services:
     container_name: syncthing
     hostname: syncthing
     environment:
-      - PUID={PUID}
-      - PGID={PGID}
+      - PUID=${PUID}
+      - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${SYNCTHING_CONFIG}:/config
